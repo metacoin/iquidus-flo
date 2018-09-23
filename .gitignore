@@ -30,3 +30,8 @@ settings.json
 *.ico
 *.png
 
+# Database
+datadb/
+
+# Temporary files
+tmp/
