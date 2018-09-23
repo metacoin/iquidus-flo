@@ -164,3 +164,6 @@ tr {
 	bottom: 0px;
 }
 
+#recent-blocks-table { border: none; }
+#recent-blocks-table_info {display: none; }
+.margin-right-7px {margin-right: 7px;}

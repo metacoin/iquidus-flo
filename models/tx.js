@@ -9,6 +9,8 @@ var TxSchema = new Schema({
   timestamp: { type: Number, default: 0 },
   blockhash: { type: String },
   blockindex: {type: Number, default: 0},
+  txcomment: {type: String},
+  txcomment_exists: {type: Boolean, index: true},
 }, {id: false});
 
 module.exports = mongoose.model('Tx', TxSchema);

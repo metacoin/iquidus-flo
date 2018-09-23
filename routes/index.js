@@ -7,7 +7,7 @@ var express = require('express')
   , qr = require('qr-image');
 
 function route_get_block(res, blockhash) {
-  lib.get_block(blockhash, function (block) {
+  lib.get_block(blockhash, 1, function (block) {
     if (block != 'There was an error. Check your console.') {
       if (blockhash == settings.genesis_block) {
         res.render('block', { active: 'block', block: block, confirmations: settings.confirmations, txs: 'GENESIS'});
@@ -241,7 +241,7 @@ router.post('/search', function(req, res) {
         if (tx) {
           res.redirect('/tx/' +tx.txid);
         } else {
-          lib.get_block(query, function(block) {
+          lib.get_block(query, 1, function(block) {
             if (block != 'There was an error. Check your console.') {
               res.redirect('/block/' + query);
             } else {

@@ -2,9 +2,57 @@ extends layout
 
 block content
   - var time = format_unixtime(tx.timestamp)
+  - var txcomment = tx.txcomment
   .col-xs-12.col-md-10.col-md-offset-1
     .well.well-sm.hidden-lg.hidden-md(style='word-wrap:break-word;')
       | #{tx.txid}
+
+    if (txcomment != '') && (txcomment != undefined) && (txcomment != null) && (txcomment != NaN)
+      .panel.panel-default
+        .panel-heading
+          strong.txcomment#floData #{txcomment}
+      script.
+        $(document).ready(function() {
+          var SignedMessage = protobuf.roots.default.SignedMessage
+          var HistorianDataPoint = protobuf.roots.default.HistorianDataPoint
+          var MessageTypes = protobuf.roots.default.MessageTypes
+          function decodeHistorianMessage (signedMessage) {
+            var msg = signedMessage.SerializedMessage
+            return HistorianDataPoint.decode(msg)
+          }
+
+          function decodeProtoMessage (msg) {
+            var dec = {}
+            var buf = protobuf.util.newBuffer(protobuf.util.base64.length(msg))
+            protobuf.util.base64.decode(msg, buf, 0)
+            var sm = SignedMessage.decode(buf)
+            dec.signedMessage = sm
+            dec.signedMessageJson = sm.toJSON()
+
+            switch (sm.MessageType) {
+              case  MessageTypes.Historian:
+                var hm = decodeHistorianMessage(sm)
+                dec.historianMessage = hm
+                dec.historianMessageJson = hm.toJSON()
+                break
+              case MessageTypes.OIP05:
+                // placeholder
+                break
+            }
+            return dec
+          }
+
+          var floData = $('#floData').text()
+          if (floData && floData.startsWith('p64:')) {
+            var msg = floData.substring(4)
+            var dec = decodeProtoMessage(msg)
+
+            var prettySignedMessage = JSON.stringify(dec.signedMessageJson, null, ' ')
+            var prettyHistorianMessage = JSON.stringify(dec.historianMessageJson, null, ' ')
+
+            $( "<br /><br /><h5>Protobuf Decoded: </h5><pre class='txcomment'>" + prettySignedMessage + "\n\n" + prettyHistorianMessage + "</pre>" ).insertAfter( "#floData" );
+          }
+        })
     .panel.panel-default
       .panel-heading.hidden-xs
         strong #{settings.symbol} txid: #{tx.txid}

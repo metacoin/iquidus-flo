@@ -21,6 +21,8 @@ html
     script(src='//cdn.datatables.net/responsive/1.0.1/js/dataTables.responsive.js')
     script(src='//cdn.datatables.net/plug-ins/725b2a2115b/integration/bootstrap/3/dataTables.bootstrap.js')
     script(src='/javascripts/chart.js')
+    script(src='//cdn.rawgit.com/dcodeIO/protobuf.js/6.8.8/dist/minimal/protobuf.min.js')
+    script(src='//cdn.rawgit.com/bitspill/oipProto/3bce694/lib/oipProto.min.js')
     script.
       $(document).ready(function(){
         $('##{active}').addClass('active');
@@ -125,6 +127,12 @@ html
                 a.navbar-link(href='/info')
                   span.glyphicon.glyphicon-info-sign
                   span.menu-text #{settings.locale.menu_api}
+            if settings.display.wiki == true
+              li#info
+                a.navbar-link(href='https://wiki.florincoin.info')
+                  span.glyphicon.glyphicon-book
+                  span.menu-text #{settings.locale.menu_wiki}
+
     .col-md-12
       .row.text-center
         .col-md-2.col-md-offset-1
